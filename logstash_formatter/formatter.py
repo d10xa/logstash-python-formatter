@@ -32,7 +32,7 @@ class LogstashFormatter(logging.Formatter):
     converter = datetime.datetime.fromtimestamp
     default_time_format = '%Y-%m-%dT%H:%M:%S.%f'
 
-    def __init__(self, fmt=None, datefmt=None, rename=None, version="1", *args, **kwargs):
+    def __init__(self, fmt=None, datefmt=None, rename=None, version="1", sort_keys=False, *args, **kwargs):
         """
         Builds the formatter.
         :param fmt: list or tuple containing default fields to include in every entry
@@ -51,6 +51,7 @@ class LogstashFormatter(logging.Formatter):
         self.datefmt = datefmt
         self.rename_map = rename or self.DEFAULT_MAPPING
         self.version = version
+        self.sort_keys = sort_keys
 
     def formatTime(self, record, datefmt=None):
         """
@@ -98,4 +99,4 @@ class LogstashFormatter(logging.Formatter):
         if self.version:
             fields_dict['@version'] = self.version
 
-        return json.dumps(fields_dict, default=str)
+        return json.dumps(fields_dict, default=str, sort_keys=self.sort_keys)
